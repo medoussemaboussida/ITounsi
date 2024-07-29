@@ -1,0 +1,8 @@
+flutter_native_splash:
+  color: "#f9f9f9"
+  image: assets/itounsi.png
+
+android_12:
+  color: "#f9f9f9"
+  image: assets/itounsi.png
+  android: true
