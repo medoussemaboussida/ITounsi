@@ -8,5 +8,5 @@ router.post('/addNews',upload.single("news_photo"),newsController.addNews);
 router.delete('/deleteNews/:id', newsController.deleteNews);
 router.get('/getNewsById/:id', newsController.getNewsById);
 router.put('/updateNews/:id',upload.single("news_photo"),newsController.updateNews);
-
+router.get('/news/getNewsByCategory/:category', newsController.getNewsByCategory);
 module.exports = router;

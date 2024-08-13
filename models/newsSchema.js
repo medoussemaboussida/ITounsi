@@ -14,7 +14,7 @@ const newsSchema = new mongoose.Schema({
 
 
 newsSchema.post("save", async function (req,res,next) {
-    console.log("user created successfully");
+    console.log("news created successfully");
     next();
 });
 

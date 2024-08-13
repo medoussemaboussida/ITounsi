@@ -92,4 +92,23 @@ module.exports.getNewsById = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
-  
+  // Afficher les news selon la catégorie sélectionnée
+module.exports.getNewsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    console.log(`Fetching news for category: ${category}`); // Debugging line
+
+    // Rechercher les actualités par catégorie
+    const newsList = await newsModel.find({ category });
+
+    if (newsList.length === 0) {
+      console.log('No news found for this category'); // Debugging line
+      return res.status(404).json({ message: 'No news found for this category' });
+    }
+
+    res.status(200).json({ newsList });
+  } catch (err) {
+    console.error('Error fetching news by category:', err); // Debugging line
+    res.status(500).json({ message: err.message });
+  }
+};
