@@ -8,4 +8,5 @@ router.post('/addEvent',upload.single("event_photo"),eventController.addEvent);
 router.delete('/deleteEvent/:id', eventController.deleteEvent);
 router.get('/getEventById/:id', eventController.getEventById);
 router.put('/updateEvent/:id',upload.single("news_photo"),eventController.updateEvent);
+router.get('/getEventsByDate/:date', eventController.getEventsByDate);
 module.exports = router;

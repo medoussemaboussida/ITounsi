@@ -95,3 +95,36 @@ module.exports.getEventById = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+ // Filtrer les événements par date
+module.exports.getEventsByDate = async (req, res) => {
+  try {
+    const { date } = req.params;
+    const parsedDate = new Date(date);
+
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format' });
+    }
+
+    // Définir le début et la fin de la journée en utilisant seulement la date
+    const startOfDay = new Date(parsedDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(parsedDate.setHours(23, 59, 59, 999));
+
+    // Requête MongoDB pour obtenir les événements de toute la journée
+    const events = await eventModel.find({
+      event_date: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    });
+
+    if (events.length === 0) {
+      return res.status(404).json({ message: 'No events found for this date' });
+    }
+
+    res.status(200).json({ events });
+  } catch (err) {
+    console.error('Error fetching events by date:', err);
+    res.status(500).json({ message: err.message });
+  }
+};
