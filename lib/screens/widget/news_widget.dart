@@ -19,7 +19,7 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   Widget build(BuildContext context) {
     // Construct the URL for the image
-    final imageUrl = 'http://192.168.1.34:5000/images/${widget.news.news_photo}';
+    final imageUrl = 'http://192.168.1.19:5000/images/${widget.news.news_photo}';
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
