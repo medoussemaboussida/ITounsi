@@ -7,8 +7,8 @@ import 'package:test_first/screens/widget/news_widget.dart';
 
 Future<List<News>> fetchNews(String category) async {
   final uri = category == 'All'
-      ? Uri.parse('http://192.168.1.19:5000/news/getNews')
-      : Uri.parse('http://192.168.1.19:5000/news/getNewsByCategory/$category');
+      ? Uri.parse('http://192.168.1.34:5000/news/getNews')
+      : Uri.parse('http://192.168.1.34:5000/news/getNewsByCategory/$category');
   final response = await http.get(uri);
 
   if (response.statusCode == 200) {

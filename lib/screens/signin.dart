@@ -36,50 +36,63 @@ class _SigninState extends State<Signin> {
   }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final Map<String, dynamic> data = {
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      };
+  if (_formKey.currentState!.validate()) {
+    final Map<String, dynamic> data = {
+      'email': _emailController.text,
+      'password': _passwordController.text,
+    };
 
-      try {
-        final response = await http.post(
-          Uri.parse('http://192.168.1.30:5000/auth/login'),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(data),
-        );
+    try {
+      final response = await http.post(
+        Uri.parse('http://192.168.1.34:5000/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
+      );
 
-        if (response.statusCode == 200) {
-          final responseData = json.decode(response.body);
-          final String token = responseData['token'];
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final String token = responseData['token'];
+        final String role = responseData['role']; // Récupérez le rôle de la réponse
 
-          // Stocker le token dans SharedPreferences
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('auth_token', token);
+        // Stocker le token dans SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
 
-          Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute(builder: (context) => Visitorhome()),
-            (route) => false,
-          );
+        // Redirection basée sur le rôle
+        Widget destination;
+        if (role == 'admin') {
+          destination = Adminhome();
+        } else if (role == 'visitor') {
+          destination = Visitorhome();
         } else {
-          // Gestion des erreurs
-          print('Failed to login: ${response.body}');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to login')),
-          );
+          // Si le rôle n'est pas reconnu, vous pouvez gérer comme vous le souhaitez
+          destination = Signin(); // Par exemple
         }
-      } catch (e) {
-        // Gestion des erreurs de requête HTTP
-        print('Failed to login: $e');
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (context) => destination),
+          (route) => false,
+        );
+      } else {
+        // Gestion des erreurs
+        print('Failed to login: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to login')),
         );
       }
-    } else {
-      print("Error!");
+    } catch (e) {
+      // Gestion des erreurs de requête HTTP
+      print('Failed to login: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to login')),
+      );
     }
+  } else {
+    print("Error!");
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

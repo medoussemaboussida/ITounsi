@@ -12,7 +12,7 @@ class EventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.19:5000/images/${event.event_photo}'; // URL de l'image
+    final imageUrl = 'http://192.168.1.34:5000/images/${event.event_photo}'; // URL de l'image
 
     return InkWell(
       onTap: () {

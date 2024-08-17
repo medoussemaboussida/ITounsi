@@ -54,7 +54,7 @@ class _AddEventState extends State<AddEvent> {
 
   Future<void> _addEvent() async {
     if (_formKey.currentState!.validate()) {
-      final uri = Uri.parse('http://192.168.1.44:5000/event/addEvent');
+      final uri = Uri.parse('http://192.168.1.22:5000/event/addEvent');
       final request = http.MultipartRequest('POST', uri)
         ..fields['title'] = _titleController.text
         ..fields['event_description'] = _descriptionController.text

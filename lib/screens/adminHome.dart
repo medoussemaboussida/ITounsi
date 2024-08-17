@@ -1,11 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:test_first/screens/admin/profile.dart';
+import 'package:test_first/screens/signin.dart';
 import 'package:test_first/screens/admin/addEvent.dart';
 import 'package:test_first/screens/admin/addNews.dart';
 import 'package:test_first/screens/admin/events.dart';
 import 'package:test_first/screens/admin/news.dart';
-import 'package:test_first/screens/admin/profile.dart';
-import 'package:test_first/screens/signin.dart';
 
 class Adminhome extends StatefulWidget {
   const Adminhome({super.key});
@@ -26,6 +33,9 @@ class _MyWidgetState extends State<Adminhome>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+  String? _username;
+  String? _userPhoto;
+  String? _email;
 
   @override
   void initState() {
@@ -35,12 +45,46 @@ class _MyWidgetState extends State<Adminhome>
       vsync: this,
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
+
+    _loadUserProfile(); // Charger les informations du profil lors de l'initialisation
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('auth_token');
+    
+    if (token != null) {
+      try {
+        final response = await http.get(
+          Uri.parse('http://192.168.1.34:5000/auth/profile'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          setState(() {
+            _username = data['username'];
+            _email = data['email'];
+            _userPhoto = data['user_photo'] != null
+                ? 'http://192.168.1.34:5000/images/${data['user_photo']}'
+                : null;
+          });
+        } else {
+          print('Failed to load user profile: ${response.body}');
+        }
+      } catch (e) {
+        print('Error fetching user profile: $e');
+      }
+    }
   }
 
   void _onItemTapped(int index) {
@@ -73,7 +117,7 @@ class _MyWidgetState extends State<Adminhome>
           backgroundColor: Colors.blueGrey.shade100,
         ),
         drawer: Drawer(
-          width: MediaQuery.of(context).size.width * 0.6,
+          width: MediaQuery.of(context).size.width * 0.7,
           backgroundColor: Colors.blueGrey.shade100,
           child: ListView(
             children: [
@@ -84,19 +128,19 @@ class _MyWidgetState extends State<Adminhome>
                         "assets/drawer.png"), // Chemin de votre image
                     fit: BoxFit.cover,
                   ),
-                  //color: Colors.blueGrey.shade100,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
-                      backgroundImage: AssetImage("assets/dbz.png"),
+                      backgroundImage: _userPhoto != null
+                          ? NetworkImage(_userPhoto!) as ImageProvider
+                          : AssetImage("assets/dbz.png"),
                       radius: 40,
                     ),
-                    SizedBox(
-                        height: 10), // Espacement entre l'image et les textes
+                    SizedBox(height: 10), // Espacement entre l'image et les textes
                     Text(
-                      "Med Oussema Boussida",
+                      _username ?? "Loading...",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -104,7 +148,7 @@ class _MyWidgetState extends State<Adminhome>
                       ),
                     ),
                     Text(
-                      "Itounsi@admin.tn",
+                      _email ?? "Loading... ", // Remplacez ceci par l'email récupéré si nécessaire
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
@@ -171,14 +215,6 @@ class _MyWidgetState extends State<Adminhome>
                   );
                 },
               ),
-              /* SizedBox(height: 320), // Espacement avant le logo
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(80.0),
-                  child: Image.asset('assets/itounsiSecond.png'), // Remplacez par le chemin de votre image
-                ),
-              ),*/
             ],
           ),
         ),

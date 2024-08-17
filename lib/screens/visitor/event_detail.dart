@@ -24,7 +24,7 @@ class _EventDetailState extends State<EventDetail> {
   }
 
  Future<Event> fetchEventById(String eventId) async {
-  final uri = Uri.parse('http://192.168.1.19:5000/event/getEventById/$eventId');
+  final uri = Uri.parse('http://192.168.1.34:5000/event/getEventById/$eventId');
   final response = await http.get(uri);
 
   if (response.statusCode == 200) {
@@ -73,7 +73,7 @@ class _EventDetailState extends State<EventDetail> {
               return Center(child: Text('No data available'));
             } else {
               final event = snapshot.data!;
-              final imageUrl = 'http://192.168.1.19:5000/images/${event.event_photo}'; // URL de l'image
+              final imageUrl = 'http://192.168.1.34:5000/images/${event.event_photo}'; // URL de l'image
               return Container(
                 margin: EdgeInsets.all(10),
                 child: SingleChildScrollView(
