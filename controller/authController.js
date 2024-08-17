@@ -48,13 +48,13 @@ module.exports.login = async (req, res) => {
 
         // Générer un token JWT
         const token = jwt.sign(
-            { userId: user._id }, // Payload
+            { userId: user._id, role: user.role }, // Payload
             process.env.SECRET_KEY, // Clé secrète
             { expiresIn: '30d' } // Expiration du token
         );
 
         // Répondre avec le token
-        res.status(200).json({ token });
+        res.status(200).json({ token, role: user.role });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -83,5 +83,46 @@ module.exports.profile = async (req, res) => {
     } catch (err) {
         console.error('Error fetching user profile:', err);
         res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+module.exports.updateProfile = async (req, res) => {
+    try {
+        if (!req.user || !req.user.userId) {
+            return res.status(400).json({ message: 'Invalid request' });
+        }
+
+        const { username, dob } = req.body;
+        const userPhoto = req.file ? req.file.filename : null;
+
+        // Trouver l'utilisateur par ID
+        const user = await userModel.findById(req.user.userId);
+
+        // Vérifier si l'utilisateur existe
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Préparer les champs à mettre à jour
+        const updateFields = {};
+        if (username) updateFields.username = username;
+        if (dob) updateFields.dob = dob; // Hash le nouveau mot de passe si fourni
+        if (userPhoto) updateFields.user_photo = userPhoto;
+
+        // Mettre à jour les informations de l'utilisateur
+        const updatedUser = await userModel.findByIdAndUpdate(req.user.userId, {
+            $set: updateFields
+        }, { new: true });
+
+        // Vérifiez si la mise à jour a réussi
+        if (!updatedUser) {
+            return res.status(500).json({ message: 'Failed to update user' });
+        }
+
+        // Retourner les données de l'utilisateur mises à jour
+        res.status(200).json(updatedUser);
+    } catch (err) {
+        console.error('Error updating user profile:', err);
+        res.status(500).json({ message: err.message });
     }
 };
