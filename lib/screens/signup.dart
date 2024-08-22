@@ -81,7 +81,7 @@ class _SignupState extends State<Signup> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://192.168.1.34:5000/auth/addVisitor'),
+          Uri.parse('http://192.168.1.32:5000/auth/addVisitor'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(data),
         );
