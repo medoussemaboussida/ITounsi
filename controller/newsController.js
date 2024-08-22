@@ -112,3 +112,20 @@ module.exports.getNewsByCategory = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+//getNewsbyid 
+
+module.exports.getNewsById = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const news = await newsModel.findById(id);
+
+      if (!news) {
+          return res.status(404).json({ message: 'News not found' });
+      }
+
+      res.status(200).json({ news });
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+};
