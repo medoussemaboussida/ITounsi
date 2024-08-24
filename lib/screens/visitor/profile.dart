@@ -47,7 +47,7 @@ class _ProfileState extends State<Profile> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.32:5000/auth/profile'),
+          Uri.parse('http://192.168.1.27:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -60,9 +60,9 @@ class _ProfileState extends State<Profile> {
             _usernameController.text = data['username'];
             // Formater la date ici
             DateTime dob = DateTime.parse(data['dob']);
-            _dobController.text = "${dob.day.toString().padLeft(2, '0')}-${dob.month.toString().padLeft(2, '0')}-${dob.year}";
+            _dobController.text = "${dob.year}-${dob.month.toString().padLeft(2, '0')}-${dob.day.toString().padLeft(2, '0')}";
             _profileImageUrl = data['user_photo'] != null
-                ? 'http://192.168.1.32:5000/images/${data['user_photo']}'
+                ? 'http://192.168.1.27:5000/images/${data['user_photo']}'
                 : null;
           });
         } else {
@@ -74,60 +74,58 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Future<void> _updateProfile({bool updateUsername = false, bool updateDob = false, bool updatePhoto = false}) async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('auth_token');
+Future<void> _updateProfile() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? token = prefs.getString('auth_token');
 
-    if (token != null) {
-      try {
-        final request = http.MultipartRequest(
-          'PUT',
-          Uri.parse('http://192.168.1.32:5000/auth/updateProfile'),
-        );
-        request.headers['Authorization'] = 'Bearer $token';
+  if (token != null) {
+    try {
+      final request = http.MultipartRequest(
+        'PUT',
+        Uri.parse('http://192.168.1.27:5000/auth/updateProfile'),
+      );
+      request.headers['Authorization'] = 'Bearer $token';
 
-        if (updateUsername) {
-          request.fields['username'] = _usernameController.text;
-        }
-        if (updateDob) {
-          request.fields['dob'] = _dobController.text; // Ajouter la date de naissance
-        }
-        if (updatePhoto && _profileImage != null) {
-          request.files.add(await http.MultipartFile.fromPath(
-            'user_photo',
-            _profileImage!.path,
-          ));
-        }
+      // Ajouter toutes les valeurs existantes, même si elles ne sont pas modifiées
+      request.fields['username'] = _usernameController.text.isNotEmpty ? _usernameController.text : _usernameController.text;
+      request.fields['dob'] = _dobController.text.isNotEmpty ? _dobController.text : _dobController.text;
 
-        final response = await request.send();
-        final responseBody = await response.stream.bytesToString();
-
-        if (response.statusCode == 200) {
-          print('Profile updated successfully');
-          setState(() {
-            if (updatePhoto) _profileImage = null;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Profile updated successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        } else {
-          print('Failed to update profile: ${response.reasonPhrase}');
-          print('Response body: $responseBody');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to update profile!'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } catch (e) {
-        print('Error updating profile: $e');
+      if (_profileImage != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'user_photo',
+          _profileImage!.path,
+        ));
       }
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        print('Profile updated successfully');
+        setState(() {
+          if (_profileImage != null) _profileImage = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        print('Failed to update profile: ${response.reasonPhrase}');
+        print('Response body: $responseBody');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error updating profile: $e');
     }
   }
+}
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -236,23 +234,21 @@ class _ProfileState extends State<Profile> {
                             ),
                             prefixIcon: Icon(Icons.calendar_today),
                           ),
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: 'Date of Birth field is required')
-                          ]),
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime(2101),
-                            );
-                            if (pickedDate != null) {
-                              setState(() {
-                                _dobController.text =
-                                    "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
-                              });
-                            }
-                          },
+                          
+                         onTap: () async {
+  DateTime? pickedDate = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(1900),
+    lastDate: DateTime(2101),
+  );
+  if (pickedDate != null) {
+    setState(() {
+      // Formater la date au format ISO 8601: YYYY-MM-DD
+      _dobController.text = pickedDate.toIso8601String().split('T').first;
+    });
+  }
+},
                         ),
                         SizedBox(height: 20),
                       ],
@@ -267,9 +263,6 @@ class _ProfileState extends State<Profile> {
                         iconSize: 30,
                         onPressed: () {
                           _updateProfile(
-                            updateUsername: true,
-                            updateDob: true,
-                            updatePhoto: _profileImage != null,
                           );
                         }, // Action de mise à jour
                       ),

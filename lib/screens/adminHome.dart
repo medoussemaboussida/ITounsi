@@ -62,7 +62,7 @@ class _MyWidgetState extends State<Adminhome>
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.32:5000/auth/profile'),
+          Uri.parse('http://192.168.1.27:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -75,7 +75,7 @@ class _MyWidgetState extends State<Adminhome>
             _username = data['username'];
             _email = data['email'];
             _userPhoto = data['user_photo'] != null
-                ? 'http://192.168.1.32:5000/images/${data['user_photo']}'
+                ? 'http://192.168.1.27:5000/images/${data['user_photo']}'
                 : null;
           });
         } else {

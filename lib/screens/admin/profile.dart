@@ -5,7 +5,7 @@ import 'package:test_first/screens/widget/users_widget.dart';
 import 'package:test_first/models/user.dart';
 
 Future<List<User>> fetchUsers() async {
-  final response = await http.get(Uri.parse('http://192.168.1.36:5000/auth/getAllUsers'));
+  final response = await http.get(Uri.parse('http://192.168.1.13:5000/auth/getAllUsers'));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);

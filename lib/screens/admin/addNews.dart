@@ -46,7 +46,7 @@ class _AddNewsState extends State<AddNews> {
 
   Future<void> _addNews() async {
     if (_formKey.currentState!.validate()) {
-      final uri = Uri.parse('http://192.168.1.36:5000/news/addNews');
+      final uri = Uri.parse('http://192.168.1.13:5000/news/addNews');
       final request = http.MultipartRequest('POST', uri)
         ..fields['category'] = _selectedCategory ?? ''
         ..fields['description'] = _descriptionController.text;

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:test_first/screens/admin/updateNews.dart';
 
 Future<void> _deleteNews(BuildContext context, String id, VoidCallback onSuccess) async {
-  final uri = Uri.parse('http://192.168.1.32:5000/news/deleteNews/$id');
+  final uri = Uri.parse('http://192.168.1.27:5000/news/deleteNews/$id');
   final response = await http.delete(uri);
 
   if (response.statusCode == 200) {
@@ -30,7 +30,7 @@ class AdminNewsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.32:5000/images/${news.news_photo}'; // URL de l'image
+    final imageUrl = 'http://192.168.1.27:5000/images/${news.news_photo}'; // URL de l'image
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

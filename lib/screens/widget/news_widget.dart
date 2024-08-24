@@ -39,7 +39,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.32:5000/auth/profile'),
+          Uri.parse('http://192.168.1.27:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -49,7 +49,7 @@ class _NewsWidgetState extends State<NewsWidget> {
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
           setState(() {
-            _userId = data['userId'];
+            _userId = data['username'];
           });
           print('User ID loaded: $_userId'); // Vérifie la valeur
         } else {
@@ -64,7 +64,8 @@ class _NewsWidgetState extends State<NewsWidget> {
   Future<void> _loadNewsId() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.32:5000/news/getNewsById/${widget.news.id}'),
+        Uri.parse(
+            'http://192.168.1.27:5000/news/getNewsById/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -94,7 +95,9 @@ class _NewsWidgetState extends State<NewsWidget> {
 
     if (newsId == null || commentText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill out all fields and ensure you are logged in.')),
+        SnackBar(
+            content: Text(
+                'Please fill out all fields and ensure you are logged in.')),
       );
       return;
     }
@@ -106,7 +109,8 @@ class _NewsWidgetState extends State<NewsWidget> {
         return;
       }
 
-      final uri = Uri.parse('http://192.168.1.32:5000/comment/addComment/$newsId');
+      final uri =
+          Uri.parse('http://192.168.1.27:5000/comment/addComment/$newsId');
 
       final response = await http.post(
         uri,
@@ -150,7 +154,8 @@ class _NewsWidgetState extends State<NewsWidget> {
   Future<void> _fetchComments() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.32:5000/comment/getAllComments/${widget.news.id}'),
+        Uri.parse(
+            'http://192.168.1.27:5000/comment/getAllComments/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -161,7 +166,8 @@ class _NewsWidgetState extends State<NewsWidget> {
         final List<Comment> loadedComments = [];
 
         for (var commentJson in data) {
-          loadedComments.add(Comment.fromJson(commentJson)); // Utilise la méthode fromJson
+          loadedComments.add(
+              Comment.fromJson(commentJson)); // Utilise la méthode fromJson
         }
 
         setState(() {
@@ -174,47 +180,89 @@ class _NewsWidgetState extends State<NewsWidget> {
     } catch (e) {
       print('Error fetching comments: $e');
     }
-}
+  }
 
+  Future<void> _deleteComment(String commentId) async {
+    try {
+      final uri = Uri.parse(
+          'http://192.168.1.27:5000/comment/deleteComment/$commentId');
 
-void _showCommentsDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Comments'),
-        content: Container(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _comments.length,
-            itemBuilder: (BuildContext context, int index) {
-              final comment = _comments[index];
-              return ListTile(
-                title: Text(comment.username), // Affiche le nom d'utilisateur
-                subtitle: Text(
-                  '${comment.commentText}\n${DateFormat('yyyy-MM-dd HH:mm').format(comment.commentDate.toLocal())}', // Affiche le texte du commentaire et la date
-                ),
-              );
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: Text('Close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+      final response = await http.delete(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       );
-    },
-  );
-}
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Comment deleted successfully!')),
+        );
+        _fetchComments(); // Recharge les commentaires après la suppression
+      } else {
+        print('Failed to delete comment: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete comment.')),
+        );
+      }
+    } catch (e) {
+      print('Error deleting comment: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting comment.')),
+      );
+    }
+  }
+
+  void _showCommentsDialog() {
+    print('User ID: $_userId');
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Comments'),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _comments.length,
+              itemBuilder: (BuildContext context, int index) {
+                final comment = _comments[index];
+                return ListTile(
+                  title: Text(comment.username), // Affiche le nom d'utilisateur
+                  subtitle: Text(
+                    '${comment.commentText}\n${DateFormat('yyyy-MM-dd HH:mm').format(comment.commentDate.toLocal())}', // Affiche le texte du commentaire et la date
+                  ),
+                  trailing: (_userId != null && comment.username == _userId)
+                      ? IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            _deleteComment(comment.id);
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      : null,
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.32:5000/images/${widget.news.news_photo}';
+    final imageUrl =
+        'http://192.168.1.27:5000/images/${widget.news.news_photo}';
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -245,7 +293,8 @@ void _showCommentsDialog() {
                 return Center(
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            (loadingProgress.expectedTotalBytes ?? 1)
                         : null,
                   ),
                 );
@@ -278,11 +327,7 @@ void _showCommentsDialog() {
                   isLiked ? Icons.favorite : Icons.favorite_border,
                   color: isLiked ? Colors.red : Color(0xFF0088cc),
                 ),
-                onPressed: () {
-                  setState(() {
-                    isLiked = !isLiked;
-                  });
-                },
+                onPressed: () {},
               ),
               IconButton(
                 iconSize: 30,
@@ -322,17 +367,20 @@ void _showCommentsDialog() {
                   ),
                   IconButton(
                     icon: Icon(Icons.send),
+                    color: Color(0xFF0088cc),
                     onPressed: () {
                       _addComment();
                     },
                   ),
+                  IconButton(
+                    iconSize: 30,
+                    icon: Icon(Icons.visibility),
+                    color: Color(0xFF0088cc),
+                    onPressed: _fetchComments, // Affiche les commentaires
+                  ),
                 ],
               ),
             ),
-          CupertinoButton(
-            child: Text('View All Comments', style: TextStyle(color: Color(0xFF0088cc))),
-            onPressed: _fetchComments,
-          ),
         ],
       ),
     );

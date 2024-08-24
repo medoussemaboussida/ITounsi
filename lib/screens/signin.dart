@@ -5,6 +5,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'; // Ajouter pour stocker le token
 import 'package:test_first/screens/adminHome.dart';
+import 'package:test_first/screens/forgetPassword.dart';
 import 'package:test_first/screens/signup.dart';
 import 'package:test_first/screens/visitorHome.dart';
 
@@ -44,7 +45,7 @@ class _SigninState extends State<Signin> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.32:5000/auth/login'),
+        Uri.parse('http://192.168.1.27:5000/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       );
@@ -176,7 +177,10 @@ class _SigninState extends State<Signin> {
                   onPressed: _submitForm,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () { Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => ForgetPassword()),
+    );},
                   child: Text(
                     "Forgot password?",
                     style: TextStyle(
