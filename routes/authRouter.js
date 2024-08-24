@@ -10,4 +10,7 @@ router.post('/addVisitor', authController.addVisitor);
 router.post('/login', authController.login);
 router.get('/profile', authenticateToken, authController.profile);
 router.put('/updateProfile',authenticateToken,upload.single("user_photo"),authController.updateProfile);
+router.post('/send-code', authController.sendVerificationCode);
+router.post('/verify-code', authController.verifyCodeAndLogin);
+
 module.exports = router;

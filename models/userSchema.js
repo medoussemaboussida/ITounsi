@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String , enum:[ 'admin', 'visitor'] , required : false},
     user_photo: {type : String , required: false},
     etat: {type : String , default:'Actif',required: false},
+    
 },
 {
     timestamps:true
