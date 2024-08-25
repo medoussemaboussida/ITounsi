@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +7,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_first/screens/admin/profile.dart';
+import 'package:test_first/screens/admin/profileAdmin.dart';
 import 'package:test_first/screens/signin.dart';
 import 'package:test_first/screens/admin/addEvent.dart';
 import 'package:test_first/screens/admin/addNews.dart';
@@ -62,7 +62,7 @@ class _MyWidgetState extends State<Adminhome>
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.27:5000/auth/profile'),
+          Uri.parse('http://192.168.1.34:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -75,7 +75,7 @@ class _MyWidgetState extends State<Adminhome>
             _username = data['username'];
             _email = data['email'];
             _userPhoto = data['user_photo'] != null
-                ? 'http://192.168.1.27:5000/images/${data['user_photo']}'
+                ? 'http://192.168.1.34:5000/images/${data['user_photo']}'
                 : null;
           });
         } else {
@@ -123,11 +123,7 @@ class _MyWidgetState extends State<Adminhome>
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                        "assets/drawer.png"), // Chemin de votre image
-                    fit: BoxFit.cover,
-                  ),
+                          color: Color(0xFF0088cc), // Remplace l'image par une couleur bleue
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,6 +188,24 @@ class _MyWidgetState extends State<Adminhome>
                 onTap: () {
                   Navigator.push(context,
                       CupertinoPageRoute(builder: ((context) => AddEvent())));
+                },
+              ),
+                  ListTile(
+                leading: RotationTransition(
+                  turns: _animation,
+                  child: Icon(Icons.update),
+                ),
+                title: Text(
+                  "Profile",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: ((context) => ProfileAdmin())));
                 },
               ),
               ListTile(

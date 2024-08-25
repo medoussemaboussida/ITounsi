@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:test_first/models/event.dart';
 import 'package:test_first/screens/visitor/event_detail.dart';
 
@@ -12,7 +13,7 @@ class EventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.27:5000/images/${event.event_photo}'; // URL de l'image
+    final imageUrl = 'http://192.168.1.34:5000/images/${event.event_photo}'; // URL de l'image
 
     return InkWell(
       onTap: () {
@@ -59,6 +60,14 @@ class EventWidget extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
+             Text(
+                            DateFormat('yyyy-MM-dd').format(event.event_date),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
           ],
         ),
       ),

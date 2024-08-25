@@ -45,7 +45,7 @@ class _SigninState extends State<Signin> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.27:5000/auth/login'),
+        Uri.parse('http://192.168.1.34:5000/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       );

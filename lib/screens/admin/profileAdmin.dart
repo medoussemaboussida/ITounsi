@@ -9,14 +9,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_first/screens/signin.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class ProfileAdmin extends StatefulWidget {
+  const ProfileAdmin({super.key});
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<ProfileAdmin> {
   late TextEditingController _usernameController;
   late TextEditingController _dobController;
   late GlobalKey<FormState> _formKey;
@@ -140,6 +140,10 @@ Future<void> _updateProfile() async {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.blueGrey.shade100,
+        appBar: AppBar(
+        title: Text('Update Profile'),
+        backgroundColor: Colors.blueGrey.shade100,
+      ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Center(

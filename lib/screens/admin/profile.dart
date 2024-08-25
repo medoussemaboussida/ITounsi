@@ -5,7 +5,7 @@ import 'package:test_first/screens/widget/users_widget.dart';
 import 'package:test_first/models/user.dart';
 
 Future<List<User>> fetchUsers() async {
-  final response = await http.get(Uri.parse('http://192.168.1.13:5000/auth/getAllUsers'));
+  final response = await http.get(Uri.parse('http://192.168.1.34:5000/auth/getAllUsers'));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
@@ -26,7 +26,7 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Users List'),
+        title: Text('Visitors List'),
       ),
       body: FutureBuilder<List<User>>(
         future: fetchUsers(),

@@ -44,7 +44,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
   }
 
   Future<void> _fetchEventDetails() async {
-    final uri = Uri.parse('http://192.168.1.13:5000/event/getEventById/${widget.eventId}');
+    final uri = Uri.parse('http://192.168.1.34:5000/event/getEventById/${widget.eventId}');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -76,7 +76,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
 
   Future<void> _updateEvent() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final uri = Uri.parse('http://192.168.1.13:5000/event/updateEvent/${widget.eventId}');
+      final uri = Uri.parse('http://192.168.1.34:5000/event/updateEvent/${widget.eventId}');
       final request = http.MultipartRequest('PUT', uri)
         ..fields['title'] = _titleController.text
         ..fields['event_date'] = _dateController.text

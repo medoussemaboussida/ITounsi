@@ -39,7 +39,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.27:5000/auth/profile'),
+          Uri.parse('http://192.168.1.34:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -65,7 +65,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://192.168.1.27:5000/news/getNewsById/${widget.news.id}'),
+            'http://192.168.1.34:5000/news/getNewsById/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -110,7 +110,7 @@ class _NewsWidgetState extends State<NewsWidget> {
       }
 
       final uri =
-          Uri.parse('http://192.168.1.27:5000/comment/addComment/$newsId');
+          Uri.parse('http://192.168.1.34:5000/comment/addComment/$newsId');
 
       final response = await http.post(
         uri,
@@ -155,7 +155,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://192.168.1.27:5000/comment/getAllComments/${widget.news.id}'),
+            'http://192.168.1.34:5000/comment/getAllComments/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -185,7 +185,7 @@ class _NewsWidgetState extends State<NewsWidget> {
   Future<void> _deleteComment(String commentId) async {
     try {
       final uri = Uri.parse(
-          'http://192.168.1.27:5000/comment/deleteComment/$commentId');
+          'http://192.168.1.34:5000/comment/deleteComment/$commentId');
 
       final response = await http.delete(
         uri,
@@ -262,7 +262,7 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   Widget build(BuildContext context) {
     final imageUrl =
-        'http://192.168.1.27:5000/images/${widget.news.news_photo}';
+        'http://192.168.1.34:5000/images/${widget.news.news_photo}';
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

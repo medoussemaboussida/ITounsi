@@ -37,7 +37,7 @@ class _EventsState extends State<Events> {
 
   Future<void> _filterEventsByDate(DateTime date) async {
     try {
-      final uri = Uri.parse('http://192.168.1.27:5000/event/getEventsByDate/${DateFormat('yyyy-MM-dd').format(date)}');
+      final uri = Uri.parse('http://192.168.1.34:5000/event/getEventsByDate/${DateFormat('yyyy-MM-dd').format(date)}');
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
@@ -76,7 +76,7 @@ class _EventsState extends State<Events> {
   }
 
   Future<List<Event>> fetchEvents() async {
-    final uri = Uri.parse('http://192.168.1.27:5000/event/getEvent');
+    final uri = Uri.parse('http://192.168.1.34:5000/event/getEvent');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {

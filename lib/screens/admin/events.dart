@@ -5,7 +5,7 @@ import 'package:test_first/models/event.dart';
 import 'package:test_first/screens/widget/admin_event_widget.dart';
 
 Future<List<Event>> fetchEvents() async {
-  final uri = Uri.parse('http://192.168.1.13:5000/event/getEvent');
+  final uri = Uri.parse('http://192.168.1.34:5000/event/getEvent');
   final response = await http.get(uri);
 
   if (response.statusCode == 200) {
