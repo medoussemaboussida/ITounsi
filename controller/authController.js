@@ -7,7 +7,7 @@ const sendVerificationEmail = require('../mailing/sendVerificationEmail');
 module.exports.getAllUsers = async (req,res) => { 
 
     try{
-        const usersList = await userModel.find()
+        const usersList = await userModel.find({ role: "visitor" })
         res.status(200).json({usersList})
     }catch(err){
         res.status(500).json({message: err.message})
@@ -21,6 +21,21 @@ module.exports.addVisitor = async (req,res) => {
         console.log(req.body);
         const{ username , dob , email , password }=req.body;
         const roleVisitor = "visitor"
+        const etatUser = "Actif"
+        const photoUser= "Null"
+        const user = new userModel({username , email , dob , password , role: roleVisitor , etat:etatUser , user_photo:photoUser});
+        const userAdded = await user.save()
+        res.status(201).json(userAdded);
+    }catch(err){
+        res.status(500).json({message: err.message})
+    }
+}
+module.exports.addAdmin = async (req,res) => { 
+
+    try{
+        console.log(req.body);
+        const{ username , dob , email , password }=req.body;
+        const roleVisitor = "admin"
         const etatUser = "Actif"
         const photoUser= "Null"
         const user = new userModel({username , email , dob , password , role: roleVisitor , etat:etatUser , user_photo:photoUser});

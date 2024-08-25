@@ -7,6 +7,7 @@ const upload = require("../middlewares/uploadFIle");
 /* GET users listing. */
 router.get('/getAllUsers', authController.getAllUsers);
 router.post('/addVisitor', authController.addVisitor);
+router.post('/addAdmin', authController.addAdmin);
 router.post('/login', authController.login);
 router.get('/profile', authenticateToken, authController.profile);
 router.put('/updateProfile',authenticateToken,upload.single("user_photo"),authController.updateProfile);
