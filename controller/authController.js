@@ -183,16 +183,15 @@ module.exports.updateMdp = async (req, res) => {
         if (!updatedUser) {
             return res.status(500).json({ message: 'Failed to update password' });
         }
-
       
-        res.status(200).json(userData);
+        res.status(200).json(updatedUser);
     } catch (err) {
         console.error('Error updating user password:', err);
         res.status(500).json({ message: err.message });
     }
 };
 
-
+//email and verif code if you forget your password
 const verificationCodes = {}; // Stockage temporaire des codes de vérification
 module.exports.sendVerificationCode = async (req, res) => {
     try {

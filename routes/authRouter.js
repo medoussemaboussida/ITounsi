@@ -13,5 +13,6 @@ router.get('/profile', authenticateToken, authController.profile);
 router.put('/updateProfile',authenticateToken,upload.single("user_photo"),authController.updateProfile);
 router.post('/send-code', authController.sendVerificationCode);
 router.post('/verify-code', authController.verifyCodeAndLogin);
+router.put('/updateMdp',authenticateToken,authController.updateMdp);
 
 module.exports = router;
