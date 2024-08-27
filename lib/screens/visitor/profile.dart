@@ -8,6 +8,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_first/screens/signin.dart';
+import 'package:test_first/screens/visitor/updatePassword.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -47,7 +48,7 @@ class _ProfileState extends State<Profile> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.34:5000/auth/profile'),
+          Uri.parse('http://192.168.1.27:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -60,9 +61,10 @@ class _ProfileState extends State<Profile> {
             _usernameController.text = data['username'];
             // Formater la date ici
             DateTime dob = DateTime.parse(data['dob']);
-            _dobController.text = "${dob.year}-${dob.month.toString().padLeft(2, '0')}-${dob.day.toString().padLeft(2, '0')}";
+            _dobController.text =
+                "${dob.year}-${dob.month.toString().padLeft(2, '0')}-${dob.day.toString().padLeft(2, '0')}";
             _profileImageUrl = data['user_photo'] != null
-                ? 'http://192.168.1.34:5000/images/${data['user_photo']}'
+                ? 'http://192.168.1.27:5000/images/${data['user_photo']}'
                 : null;
           });
         } else {
@@ -74,58 +76,62 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-Future<void> _updateProfile() async {
-  final prefs = await SharedPreferences.getInstance();
-  final String? token = prefs.getString('auth_token');
+  Future<void> _updateProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('auth_token');
 
-  if (token != null) {
-    try {
-      final request = http.MultipartRequest(
-        'PUT',
-        Uri.parse('http://192.168.1.34:5000/auth/updateProfile'),
-      );
-      request.headers['Authorization'] = 'Bearer $token';
-
-      // Ajouter toutes les valeurs existantes, même si elles ne sont pas modifiées
-      request.fields['username'] = _usernameController.text.isNotEmpty ? _usernameController.text : _usernameController.text;
-      request.fields['dob'] = _dobController.text.isNotEmpty ? _dobController.text : _dobController.text;
-
-      if (_profileImage != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'user_photo',
-          _profileImage!.path,
-        ));
-      }
-
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-
-      if (response.statusCode == 200) {
-        print('Profile updated successfully');
-        setState(() {
-          if (_profileImage != null) _profileImage = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: Colors.green,
-          ),
+    if (token != null) {
+      try {
+        final request = http.MultipartRequest(
+          'PUT',
+          Uri.parse('http://192.168.1.27:5000/auth/updateProfile'),
         );
-      } else {
-        print('Failed to update profile: ${response.reasonPhrase}');
-        print('Response body: $responseBody');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update profile!'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        request.headers['Authorization'] = 'Bearer $token';
+
+        // Ajouter toutes les valeurs existantes, même si elles ne sont pas modifiées
+        request.fields['username'] = _usernameController.text.isNotEmpty
+            ? _usernameController.text
+            : _usernameController.text;
+        request.fields['dob'] = _dobController.text.isNotEmpty
+            ? _dobController.text
+            : _dobController.text;
+
+        if (_profileImage != null) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'user_photo',
+            _profileImage!.path,
+          ));
+        }
+
+        final response = await request.send();
+        final responseBody = await response.stream.bytesToString();
+
+        if (response.statusCode == 200) {
+          print('Profile updated successfully');
+          setState(() {
+            if (_profileImage != null) _profileImage = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Profile updated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          print('Failed to update profile: ${response.reasonPhrase}');
+          print('Response body: $responseBody');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to update profile!'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        print('Error updating profile: $e');
       }
-    } catch (e) {
-      print('Error updating profile: $e');
     }
   }
-}
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -168,15 +174,17 @@ Future<void> _updateProfile() async {
                           backgroundImage: _profileImage != null
                               ? FileImage(File(_profileImage!.path))
                               : _profileImageUrl != null
-                                  ? NetworkImage(_profileImageUrl!) as ImageProvider
+                                  ? NetworkImage(_profileImageUrl!)
+                                      as ImageProvider
                                   : null,
-                          child: _profileImage == null && _profileImageUrl == null
-                              ? Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color: Colors.black,
-                                )
-                              : null,
+                          child:
+                              _profileImage == null && _profileImageUrl == null
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.black,
+                                    )
+                                  : null,
                         ),
                         Positioned(
                           bottom: 0,
@@ -207,7 +215,8 @@ Future<void> _updateProfile() async {
                           controller: _usernameController,
                           decoration: InputDecoration(
                             labelText: "Username",
-                            labelStyle: TextStyle(color: Colors.black87, fontSize: 12),
+                            labelStyle:
+                                TextStyle(color: Colors.black87, fontSize: 12),
                             fillColor: Colors.blueGrey.shade200,
                             filled: true,
                             border: OutlineInputBorder(
@@ -217,7 +226,8 @@ Future<void> _updateProfile() async {
                             prefixIcon: Icon(Icons.person),
                           ),
                           validator: MultiValidator([
-                            RequiredValidator(errorText: 'Username field is required')
+                            RequiredValidator(
+                                errorText: 'Username field is required')
                           ]),
                         ),
                         SizedBox(height: 10),
@@ -225,7 +235,8 @@ Future<void> _updateProfile() async {
                           controller: _dobController,
                           decoration: InputDecoration(
                             labelText: "Date of Birth",
-                            labelStyle: TextStyle(color: Colors.black87, fontSize: 12),
+                            labelStyle:
+                                TextStyle(color: Colors.black87, fontSize: 12),
                             fillColor: Colors.blueGrey.shade200,
                             filled: true,
                             border: OutlineInputBorder(
@@ -234,21 +245,23 @@ Future<void> _updateProfile() async {
                             ),
                             prefixIcon: Icon(Icons.calendar_today),
                           ),
-                          
-                         onTap: () async {
-  DateTime? pickedDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(1900),
-    lastDate: DateTime(2101),
-  );
-  if (pickedDate != null) {
-    setState(() {
-      // Formater la date au format ISO 8601: YYYY-MM-DD
-      _dobController.text = pickedDate.toIso8601String().split('T').first;
-    });
-  }
-},
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2101),
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                // Formater la date au format ISO 8601: YYYY-MM-DD
+                                _dobController.text = pickedDate
+                                    .toIso8601String()
+                                    .split('T')
+                                    .first;
+                              });
+                            }
+                          },
                         ),
                         SizedBox(height: 20),
                       ],
@@ -262,14 +275,16 @@ Future<void> _updateProfile() async {
                         icon: Icon(Icons.update, color: Color(0xFF0088cc)),
                         iconSize: 30,
                         onPressed: () {
-                          _updateProfile(
-                          );
+                          _updateProfile();
                         }, // Action de mise à jour
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete, color: Color(0xFF0088cc)),
+                        icon: Icon(Icons.password, color: Color(0xFF0088cc)),
                         iconSize: 30,
-                        onPressed: () {
+                        onPressed: () { Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => UpdatePassword()),
+    );
                           // Action de suppression
                         },
                       ),

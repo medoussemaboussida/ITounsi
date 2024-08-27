@@ -9,7 +9,7 @@ import 'package:test_first/models/comment.dart'; // Assure-toi que le modèle Co
 import 'package:test_first/screens/admin/updateNews.dart';
 
 Future<void> _deleteNews(BuildContext context, String id, VoidCallback onSuccess) async {
-  final uri = Uri.parse('http://192.168.1.34:5000/news/deleteNews/$id');
+  final uri = Uri.parse('http://192.168.1.27:5000/news/deleteNews/$id');
   final response = await http.delete(uri);
 
   if (response.statusCode == 200) {
@@ -55,7 +55,7 @@ class _AdminNewsWidgetState extends State<AdminNewsWidget> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.34:5000/auth/profile'),
+          Uri.parse('http://192.168.1.27:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -79,7 +79,7 @@ class _AdminNewsWidgetState extends State<AdminNewsWidget> {
   Future<void> _loadNewsId() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.34:5000/news/getNewsById/${widget.news.id}'),
+        Uri.parse('http://192.168.1.27:5000/news/getNewsById/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -101,7 +101,7 @@ class _AdminNewsWidgetState extends State<AdminNewsWidget> {
   Future<void> _fetchComments() async {
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.1.34:5000/comment/getAllComments/${widget.news.id}'),
+        Uri.parse('http://192.168.1.27:5000/comment/getAllComments/${widget.news.id}'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -129,7 +129,7 @@ class _AdminNewsWidgetState extends State<AdminNewsWidget> {
 
   Future<void> _deleteComment(String commentId) async {
     try {
-      final uri = Uri.parse('http://192.168.1.34:5000/comment/deleteComment/$commentId');
+      final uri = Uri.parse('http://192.168.1.27:5000/comment/deleteComment/$commentId');
 
       final response = await http.delete(
         uri,
@@ -203,7 +203,7 @@ class _AdminNewsWidgetState extends State<AdminNewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.34:5000/images/${widget.news.news_photo}'; // URL de l'image
+    final imageUrl = 'http://192.168.1.27:5000/images/${widget.news.news_photo}'; // URL de l'image
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

@@ -6,20 +6,24 @@ import 'package:test_first/screens/visitor/event_detail.dart';
 
 class EventWidget extends StatelessWidget {
   const EventWidget({
-    super.key, required this.event,
+    super.key,
+    required this.event,
   });
 
   final Event event;
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = 'http://192.168.1.34:5000/images/${event.event_photo}'; // URL de l'image
+    final imageUrl =
+        'http://192.168.1.27:5000/images/${event.event_photo}'; // URL de l'image
 
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          CupertinoPageRoute(builder: (context) => EventDetail(eventId: event.id)), // Passez l'ID de l'événement
+          CupertinoPageRoute(
+              builder: (context) =>
+                  EventDetail(eventId: event.id)), // Passez l'ID de l'événement
         );
       },
       child: Container(
@@ -60,14 +64,14 @@ class EventWidget extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-             Text(
-                            DateFormat('yyyy-MM-dd').format(event.event_date),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
+            Text(
+              DateFormat('yyyy-MM-dd').format(event.event_date),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
           ],
         ),
       ),

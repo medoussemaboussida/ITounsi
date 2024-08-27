@@ -67,14 +67,6 @@ class UserWidget extends StatelessWidget {
               fontSize: 14,
             ),
           ),
-          SizedBox(height: 5),
-          Text(
-            "etat: ${user.etat}",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-            ),
-          ),
         ],
       ),
     );
