@@ -48,7 +48,7 @@ class _ProfileState extends State<Profile> {
     if (token != null) {
       try {
         final response = await http.get(
-          Uri.parse('http://192.168.1.27:5000/auth/profile'),
+          Uri.parse('http://192.168.1.36:5000/auth/profile'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
@@ -64,7 +64,7 @@ class _ProfileState extends State<Profile> {
             _dobController.text =
                 "${dob.year}-${dob.month.toString().padLeft(2, '0')}-${dob.day.toString().padLeft(2, '0')}";
             _profileImageUrl = data['user_photo'] != null
-                ? 'http://192.168.1.27:5000/images/${data['user_photo']}'
+                ? 'http://192.168.1.36:5000/images/${data['user_photo']}'
                 : null;
           });
         } else {
@@ -84,7 +84,7 @@ class _ProfileState extends State<Profile> {
       try {
         final request = http.MultipartRequest(
           'PUT',
-          Uri.parse('http://192.168.1.27:5000/auth/updateProfile'),
+          Uri.parse('http://192.168.1.36:5000/auth/updateProfile'),
         );
         request.headers['Authorization'] = 'Bearer $token';
 
@@ -282,9 +282,9 @@ class _ProfileState extends State<Profile> {
                         icon: Icon(Icons.password, color: Color(0xFF0088cc)),
                         iconSize: 30,
                         onPressed: () { Navigator.push(
-      context,
-      CupertinoPageRoute(builder: (context) => UpdatePassword()),
-    );
+                       context,
+                      CupertinoPageRoute(builder: (context) => UpdatePassword()),
+                       );
                           // Action de suppression
                         },
                       ),

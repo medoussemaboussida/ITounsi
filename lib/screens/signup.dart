@@ -81,7 +81,7 @@ class _SignupState extends State<Signup> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://192.168.1.27:5000/auth/addVisitor'),
+          Uri.parse('http://192.168.1.36:5000/auth/addVisitor'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(data),
         );
@@ -268,73 +268,6 @@ class _SignupState extends State<Signup> {
                         borderRadius: BorderRadius.circular(40),
                         onPressed: _submitForm,
                       ),
-                      SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.black,
-                              height: 1.5,
-                              thickness: 1.5,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              "Sign up with",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: Colors.black,
-                              height: 1.5,
-                              thickness: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Image.asset("assets/google.png", width: 24),
-                                SizedBox(width: 8), // Adjust this space as needed
-                                Text(
-                                  "Google",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          OutlinedButton(
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Image.asset("assets/facebook.png", width: 27),
-                                SizedBox(width: 8), // Adjust this space as needed
-                                Text(
-                                  "Facebook",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacement(

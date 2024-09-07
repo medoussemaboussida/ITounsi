@@ -42,7 +42,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       if (token != null) {
         try { 
           final response = await http.put(
-            Uri.parse('http://192.168.1.27:5000/auth/updateMdp'),
+            Uri.parse('http://192.168.1.36:5000/auth/updateMdp'),
             headers: {
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',

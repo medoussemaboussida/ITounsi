@@ -46,7 +46,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://192.168.1.27:5000/auth/send-code'),
+          Uri.parse('http://192.168.1.36:5000/auth/send-code'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(data),
         );
@@ -84,7 +84,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.27:5000/auth/verify-code'),
+        Uri.parse('http://192.168.1.36:5000/auth/verify-code'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       );

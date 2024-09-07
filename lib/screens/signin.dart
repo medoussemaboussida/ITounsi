@@ -45,7 +45,7 @@ class _SigninState extends State<Signin> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://192.168.1.27:5000/auth/login'),
+          Uri.parse('http://192.168.1.36:5000/auth/login'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(data),
         );
@@ -193,73 +193,7 @@ class _SigninState extends State<Signin> {
                     ),
                   ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: Colors.black,
-                        height: 1.5,
-                        thickness: 1.5,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Sign in with",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        color: Colors.black,
-                        height: 1.5,
-                        thickness: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Image.asset("assets/google.png", width: 24),
-                          SizedBox(width: 8),
-                          Text(
-                            "Google",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    OutlinedButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          Image.asset("assets/facebook.png", width: 27),
-                          SizedBox(width: 8),
-                          Text(
-                            "Facebook",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                TextButton(
+                             TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -270,7 +204,7 @@ class _SigninState extends State<Signin> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Don't have an account? ",
+                          text: "You don't have an account? ",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,

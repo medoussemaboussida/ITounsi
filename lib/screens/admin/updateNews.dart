@@ -37,7 +37,7 @@ class _UpdateNewsPageState extends State<UpdateNewsPage> {
   }
 
   Future<void> _fetchNewsDetails() async {
-    final uri = Uri.parse('http://192.168.1.27:5000/news/getNewsById/${widget.newsId}');
+    final uri = Uri.parse('http://192.168.1.36:5000/news/getNewsById/${widget.newsId}');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -66,7 +66,7 @@ class _UpdateNewsPageState extends State<UpdateNewsPage> {
 
   Future<void> _updateNews() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final uri = Uri.parse('http://192.168.1.27:5000/news/updateNews/${widget.newsId}');
+      final uri = Uri.parse('http://192.168.1.36:5000/news/updateNews/${widget.newsId}');
       final request = http.MultipartRequest('PUT', uri)
         ..fields['description'] = _descriptionController.text
         ..fields['category'] = _selectedCategory ?? '';
